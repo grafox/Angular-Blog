@@ -1,32 +1,29 @@
-import { Injectable, signal, effect, PLATFORM_ID, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Injectable, signal, effect } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private platformId = inject(PLATFORM_ID);
-  
-  theme = signal<'light' | 'dark'>('light');
+  currentTheme = signal<'light' | 'dark'>('dark'); // Default to dark
 
   constructor() {
-    if (isPlatformBrowser(this.platformId)) {
-      const storedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      this.theme.set(storedTheme || (prefersDark ? 'dark' : 'light'));
-
-      effect(() => {
-        const newTheme = this.theme();
-        if (newTheme === 'dark') {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-        localStorage.setItem('theme', newTheme);
-      });
+    // Load theme from localStorage on initialization
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      this.currentTheme.set(savedTheme);
     }
+
+    // Effect to apply theme class to the document's html element
+    effect(() => {
+      const theme = this.currentTheme();
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('theme', theme);
+    });
   }
 
   toggleTheme() {
-    this.theme.update(current => (current === 'light' ? 'dark' : 'light'));
+    this.currentTheme.update(theme => (theme === 'light' ? 'dark' : 'light'));
   }
 }

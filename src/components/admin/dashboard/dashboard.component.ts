@@ -16,4 +16,5 @@ export class DashboardComponent {
   currentUser = this.authService.currentUser;
   postCount = this.blogService.postCount;
   userCount = this.authService.userCount;
+  commentCount = this.blogService.commentCount;
 }

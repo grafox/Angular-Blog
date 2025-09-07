@@ -1,13 +1,11 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { Post, Author, Category, Tag } from '../models/post.model';
+import { Comment } from '../models/comment.model';
 
 const AUTHORS: Author[] = [
   { id: 'user-1', name: 'Alex Johnson', profileImage: 'https://i.pravatar.cc/150?u=alex', bio: 'Frontend enthusiast with a passion for clean code and beautiful UIs.' },
-  { id: 'user-2', name: 'Maria Garcia', profileImage: 'https://i.pravatar.cc/150?u=maria', bio: 'Backend developer specializing in serverless architectures and Firebase.' },
-  // Add users who can log in to the author list
-  { id: 'admin-1', name: 'Admin User', profileImage: 'https://i.pravatar.cc/150?u=admin', bio: 'Site administrator with full access.' },
-  { id: 'editor-1', name: 'Editor User', profileImage: 'https://i.pravatar.cc/150?u=editor', bio: 'Content editor specializing in web technologies.' }
+  { id: 'user-2', name: 'Maria Garcia', profileImage: 'https://i.pravatar.cc/150?u=maria', bio: 'Backend developer specializing in serverless architectures and Firebase.' }
 ];
 
 const CATEGORIES: Category[] = [
@@ -113,6 +111,12 @@ service cloud.firestore {
   }
 ];
 
+const MOCK_COMMENTS: Comment[] = [
+    { id: 'comment-1', postId: 'post-1', userId: 'user-2', userName: 'Maria Garcia', userProfileImage: 'https://i.pravatar.cc/150?u=maria', content: 'Great introduction to Signals! Really looking forward to using this more.', createdAt: new Date('2023-10-26T11:00:00Z'), status: 'approved' },
+    { id: 'comment-2', postId: 'post-1', userId: 'user-guest', userName: 'Guest User', userProfileImage: 'https://i.pravatar.cc/150?u=guest', content: 'This was helpful, thanks!', createdAt: new Date('2023-10-26T11:30:00Z'), status: 'pending' },
+    { id: 'comment-3', postId: 'post-2', userId: 'user-1', userName: 'Alex Johnson', userProfileImage: 'https://i.pravatar.cc/150?u=alex', content: 'Security rules are so important. Glad to see a post covering them.', createdAt: new Date('2023-10-20T15:00:00Z'), status: 'approved' },
+];
+
 
 @Injectable({ providedIn: 'root' })
 export class BlogService {
@@ -120,8 +124,10 @@ export class BlogService {
   private readonly authors = signal<Author[]>(AUTHORS);
   private readonly categories = signal<Category[]>(CATEGORIES);
   private readonly tags = signal<Tag[]>(TAGS);
+  private readonly comments = signal<Comment[]>(MOCK_COMMENTS);
 
   readonly postCount = computed(() => this.posts().length);
+  readonly commentCount = computed(() => this.comments().length);
 
   getPosts() {
     return this.posts.asReadonly();
@@ -133,6 +139,20 @@ export class BlogService {
 
   getCategories() {
     return this.categories.asReadonly();
+  }
+  
+  getComments() {
+    return this.comments.asReadonly();
+  }
+
+  updateCommentStatus(commentId: string, status: 'approved' | 'pending' | 'rejected') {
+    this.comments.update(comments => comments.map(comment =>
+      comment.id === commentId ? { ...comment, status } : comment
+    ));
+  }
+
+  deleteComment(commentId: string) {
+    this.comments.update(comments => comments.filter(c => c.id !== commentId));
   }
 
   getPostById(id: string): Observable<Post | undefined> {
@@ -169,8 +189,7 @@ export class BlogService {
   }
   
   deletePost(postId: string) {
-    const updatedPosts = this.posts().filter(p => p.id !== postId);
-    this.posts.set(updatedPosts);
+    this.posts.update(posts => posts.filter(p => p.id !== postId));
   }
 
   searchPosts(query: string): Observable<Post[]> {

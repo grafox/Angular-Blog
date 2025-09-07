@@ -14,6 +14,7 @@ import { roleGuard } from './guards/role.guard';
 import { UserRole } from './models/user.model';
 import { PostFormComponent } from './components/admin/post-form/post-form.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
+import { CommentManagementComponent } from './components/admin/comment-management/comment-management.component';
 
 export const APP_ROUTES: Routes = [
   // Public Routes
@@ -61,6 +62,7 @@ export const APP_ROUTES: Routes = [
       { path: 'posts', component: PostManagementComponent, title: 'Manage Posts | Admin' },
       { path: 'posts/new', component: PostFormComponent, title: 'Create Post | Admin' },
       { path: 'posts/edit/:id', component: PostFormComponent, title: 'Edit Post | Admin' },
+      { path: 'comments', component: CommentManagementComponent, title: 'Manage Comments | Admin' },
       {
         path: 'users',
         component: UserManagementComponent,

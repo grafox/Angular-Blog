@@ -33,13 +33,13 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 @for (category of post.categories; track category.id) {
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300 mr-1">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 mr-1">
                     {{ category.name }}
                   </span>
                 }
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                 <span [class]="post.status === 'published' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                 <span [class]="post.status === 'published' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                   {{ post.status }}
                 </span>
               </td>
@@ -48,7 +48,7 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                 <button (click)="editPost(post.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</button>
-                <button (click)="promptDeletePost(post.id)" class="text-red-600 hover:text-red-900 dark:text-red-500 dark:hover:text-red-400">Delete</button>
+                <button (click)="deletePost(post.id)" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Delete</button>
               </td>
             </tr>
           } @empty {
@@ -63,13 +63,3 @@
     </div>
   </div>
 </div>
-
-<app-confirmation-dialog 
-  [isOpen]="isDeleteModalOpen()"
-  title="Delete Post"
-  message="Are you sure you want to delete this post? This action cannot be undone."
-  confirmButtonText="Yes, Delete"
-  cancelButtonText="No, Cancel"
-  (confirm)="confirmDelete()"
-  (cancel)="closeDeleteModal()">
-</app-confirmation-dialog>

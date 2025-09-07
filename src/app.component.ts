@@ -26,7 +26,7 @@ import { ThemeService } from './services/theme.service';
 })
 export class AppComponent {
   private router = inject(Router);
-  private themeService = inject(ThemeService);
+  private themeService = inject(ThemeService); // Inject to initialize
 
   private currentUrl = toSignal(
     this.router.events.pipe(

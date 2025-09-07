@@ -1,13 +1,12 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { BlogService } from '../../../services/blog.service';
-import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-post-management',
   templateUrl: './post-management.component.html',
-  imports: [CommonModule, RouterModule, DatePipe, ConfirmationDialogComponent],
+  imports: [CommonModule, RouterModule, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostManagementComponent {
@@ -15,9 +14,6 @@ export class PostManagementComponent {
   private router = inject(Router);
 
   posts = this.blogService.getPosts();
-
-  isDeleteModalOpen = signal(false);
-  postToDeleteId = signal<string | null>(null);
 
   createPost() {
     this.router.navigate(['/admin/posts/new']);
@@ -27,21 +23,9 @@ export class PostManagementComponent {
     this.router.navigate(['/admin/posts/edit', postId]);
   }
 
-  promptDeletePost(postId: string) {
-    this.postToDeleteId.set(postId);
-    this.isDeleteModalOpen.set(true);
-  }
-
-  confirmDelete() {
-    const postId = this.postToDeleteId();
-    if (postId) {
+  deletePost(postId: string) {
+    if (confirm('Are you sure you want to delete this post?')) {
       this.blogService.deletePost(postId);
     }
-    this.closeDeleteModal();
-  }
-
-  closeDeleteModal() {
-    this.isDeleteModalOpen.set(false);
-    this.postToDeleteId.set(null);
   }
 }

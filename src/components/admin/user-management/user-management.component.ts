@@ -1,14 +1,13 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 import { UserRole } from '../../../models/user.model';
 import { Router, RouterModule } from '@angular/router';
-import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
-  imports: [CommonModule, RouterModule, ConfirmationDialogComponent],
+  imports: [CommonModule, RouterModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserManagementComponent {
@@ -18,9 +17,6 @@ export class UserManagementComponent {
   users = this.authService.getUsers();
   currentUser = this.authService.currentUser;
   
-  isDeleteModalOpen = signal(false);
-  userToDeleteId = signal<string | null>(null);
-
   // Expose UserRole enum to the template
   userRoles = Object.values(UserRole).filter(role => role !== UserRole.Visitor);
 
@@ -42,21 +38,9 @@ export class UserManagementComponent {
     this.authService.updateUserRole(userId, newRole);
   }
   
-  promptDeleteUser(userId: string) {
-    this.userToDeleteId.set(userId);
-    this.isDeleteModalOpen.set(true);
-  }
-
-  confirmDelete() {
-    const userId = this.userToDeleteId();
-    if (userId) {
+  deleteUser(userId: string) {
+    if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       this.authService.deleteUser(userId);
     }
-    this.closeDeleteModal();
-  }
-
-  closeDeleteModal() {
-    this.isDeleteModalOpen.set(false);
-    this.userToDeleteId.set(null);
   }
 }

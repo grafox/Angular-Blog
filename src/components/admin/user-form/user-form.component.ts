@@ -14,8 +14,7 @@ import { switchMap, take } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserFormComponent implements OnInit {
-  // FIX: Explicitly typed the injected FormBuilder to resolve a TypeScript error where it was being inferred as 'unknown'.
-  private fb: FormBuilder = inject(FormBuilder);
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);

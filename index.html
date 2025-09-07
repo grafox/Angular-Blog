@@ -35,36 +35,21 @@
   .prose blockquote {
     border-left-color: #4f46e5; /* Tailwind indigo-600 */
   }
+  .dark .prose blockquote {
+    border-left-color: #818cf8; /* Tailwind indigo-400 */
+  }
 
   /* Custom styles for Quill editor in dark mode */
-  .dark .ql-toolbar {
-    background: #374151; /* gray-700 */
-    border-color: #4b5563 !important; /* gray-600 */
-  }
-  .dark .ql-snow .ql-stroke, .dark .ql-snow .ql-fill {
-    stroke: #d1d5db; /* gray-300 */
-  }
-   .dark .ql-snow .ql-picker {
-    color: #d1d5db; /* gray-300 */
-  }
-  .dark .ql-snow .ql-picker-options {
-      background-color: #374151; /* gray-700 */
-      border-color: #4b5563 !important; /* gray-600 */
-  }
-  .dark .ql-container {
-    background: #4b5563; /* gray-600 */
-    color: #f3f4f6; /* gray-100 */
-    border-color: #4b5563 !important; /* gray-600 */
-  }
+  .dark .ql-snow { border-color: #4b5563; } /* gray-600 */
+  .dark .ql-toolbar { background: #374151; border-bottom-color: #4b5563 !important; } /* gray-700, gray-600 */
+  .dark .ql-toolbar .ql-stroke { stroke: #d1d5db; } /* gray-300 */
+  .dark .ql-toolbar .ql-fill { fill: #d1d5db; } /* gray-300 */
+  .dark .ql-toolbar .ql-picker-label { color: #d1d5db; } /* gray-300 */
+  .dark .ql-toolbar button:hover, .dark .ql-toolbar .ql-picker-label:hover { background-color: #4b5563; } /* gray-600 */
+  .dark .ql-toolbar button:hover .ql-stroke, .dark .ql-toolbar .ql-picker-label:hover .ql-stroke { stroke: #fff; }
+  .dark .ql-toolbar .ql-picker-options { background-color: #1f2937; border-color: #4b5563; color: #d1d5db; }
+  .dark .ql-editor { background: #374151; color: #f9fafb; } /* gray-700, gray-50 */
 </style>
-<script>
-  // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-  if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark')
-  } else {
-    document.documentElement.classList.remove('dark')
-  }
-</script>
 <script type="importmap">
 {
   "imports": {
@@ -86,7 +71,7 @@
 }
 </script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans transition-colors duration-300">
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
   <app-root></app-root>
 </body>
 </html>

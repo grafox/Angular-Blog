@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SideNavComponent } from '../side-nav/side-nav.component';
 
@@ -8,4 +8,10 @@ import { SideNavComponent } from '../side-nav/side-nav.component';
   imports: [RouterModule, SideNavComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminLayoutComponent {}
+export class AdminLayoutComponent {
+  isSideNavOpen = signal(false);
+
+  toggleSideNav() {
+    this.isSideNavOpen.update(value => !value);
+  }
+}
