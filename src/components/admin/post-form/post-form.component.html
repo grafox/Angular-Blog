@@ -1,23 +1,23 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
     <div class="flex items-center space-x-4">
-      <a routerLink="/admin/posts" class="text-indigo-600 hover:text-indigo-800">
+      <a routerLink="/admin/posts" class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
         </svg>
       </a>
-      <h1 class="text-3xl font-bold text-gray-800">
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
         {{ isEditMode() ? 'Edit Post' : 'Create New Post' }}
       </h1>
     </div>
   </div>
 
-  <div class="bg-white p-8 rounded-lg shadow-md">
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
     <form [formGroup]="postForm" (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Title -->
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-        <input type="text" id="title" formControlName="title" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+        <input type="text" id="title" formControlName="title" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
         @if (postForm.get('title')?.invalid && postForm.get('title')?.touched) {
           <p class="mt-1 text-sm text-red-600">Title is required.</p>
         }
@@ -25,8 +25,8 @@
 
       <!-- Content Editor -->
       <div>
-        <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
-        <div id="editor-container" class="mt-1 bg-white" style="height: 200px;"></div>
+        <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Content</label>
+        <div id="editor-container" class="mt-1" style="height: 200px;"></div>
         <input type="hidden" formControlName="content">
          @if (postForm.get('content')?.invalid && postForm.get('content')?.touched) {
           <p class="mt-1 text-sm text-red-600">Content is required.</p>
@@ -36,8 +36,8 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Author -->
         <div>
-          <label for="author" class="block text-sm font-medium text-gray-700">Author</label>
-          <select id="author" formControlName="author" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+          <label for="author" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Author</label>
+          <select id="author" formControlName="author" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
             <option [ngValue]="null" disabled>Select an author</option>
             @for (author of authors(); track author.id) {
               <option [ngValue]="author">{{ author.name }}</option>
@@ -50,8 +50,8 @@
 
         <!-- Status -->
         <div>
-          <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-          <select id="status" formControlName="status" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+          <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+          <select id="status" formControlName="status" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
             <option value="draft">Draft</option>
             <option value="published">Published</option>
           </select>
@@ -60,12 +60,12 @@
       
       <!-- Categories -->
       <div>
-        <label class="block text-sm font-medium text-gray-700">Categories</label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categories</label>
         <div class="mt-2 space-y-2">
            @for (category of categories(); track category.id) {
             <div class="flex items-center">
               <input type="checkbox" [id]="'cat-' + category.id" [value]="category.id" (change)="onCategoryChange($event, category)" [checked]="isCategorySelected(category)" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-              <label [for]="'cat-' + category.id" class="ml-3 text-sm text-gray-600">{{ category.name }}</label>
+              <label [for]="'cat-' + category.id" class="ml-3 text-sm text-gray-600 dark:text-gray-400">{{ category.name }}</label>
             </div>
            }
         </div>
@@ -77,14 +77,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Tags -->
         <div>
-          <label for="tags" class="block text-sm font-medium text-gray-700">Tags (comma-separated)</label>
-          <input type="text" id="tags" formControlName="tags" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+          <label for="tags" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tags (comma-separated)</label>
+          <input type="text" id="tags" formControlName="tags" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
         </div>
 
         <!-- Featured Image URL -->
         <div>
-          <label for="featuredImage" class="block text-sm font-medium text-gray-700">Featured Image URL</label>
-          <input type="text" id="featuredImage" formControlName="featuredImage" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+          <label for="featuredImage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Featured Image URL</label>
+          <input type="text" id="featuredImage" formControlName="featuredImage" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
            @if (postForm.get('featuredImage')?.invalid && postForm.get('featuredImage')?.touched) {
             <p class="mt-1 text-sm text-red-600">Image URL is required.</p>
           }
@@ -92,8 +92,8 @@
       </div>
       
       <!-- Action Buttons -->
-      <div class="pt-6 border-t border-gray-200 flex justify-end items-center space-x-3">
-        <button type="button" routerLink="/admin/posts" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <div class="pt-6 border-t border-gray-200 dark:border-gray-600 flex justify-end items-center space-x-3">
+        <button type="button" routerLink="/admin/posts" class="bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Cancel
         </button>
         <button type="submit" [disabled]="postForm.invalid" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed">

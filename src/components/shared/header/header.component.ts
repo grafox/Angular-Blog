@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  imports: [RouterModule],
+  imports: [RouterModule, ThemeToggleComponent],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {

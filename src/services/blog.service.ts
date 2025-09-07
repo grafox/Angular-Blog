@@ -4,7 +4,10 @@ import { Post, Author, Category, Tag } from '../models/post.model';
 
 const AUTHORS: Author[] = [
   { id: 'user-1', name: 'Alex Johnson', profileImage: 'https://i.pravatar.cc/150?u=alex', bio: 'Frontend enthusiast with a passion for clean code and beautiful UIs.' },
-  { id: 'user-2', name: 'Maria Garcia', profileImage: 'https://i.pravatar.cc/150?u=maria', bio: 'Backend developer specializing in serverless architectures and Firebase.' }
+  { id: 'user-2', name: 'Maria Garcia', profileImage: 'https://i.pravatar.cc/150?u=maria', bio: 'Backend developer specializing in serverless architectures and Firebase.' },
+  // Add users who can log in to the author list
+  { id: 'admin-1', name: 'Admin User', profileImage: 'https://i.pravatar.cc/150?u=admin', bio: 'Site administrator with full access.' },
+  { id: 'editor-1', name: 'Editor User', profileImage: 'https://i.pravatar.cc/150?u=editor', bio: 'Content editor specializing in web technologies.' }
 ];
 
 const CATEGORIES: Category[] = [
@@ -166,7 +169,8 @@ export class BlogService {
   }
   
   deletePost(postId: string) {
-    this.posts.update(posts => posts.filter(p => p.id !== postId));
+    const updatedPosts = this.posts().filter(p => p.id !== postId);
+    this.posts.set(updatedPosts);
   }
 
   searchPosts(query: string): Observable<Post[]> {

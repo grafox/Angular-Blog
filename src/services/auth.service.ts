@@ -59,7 +59,8 @@ export class AuthService {
       console.error("You cannot delete your own account.");
       return;
     }
-    this.users.update(users => users.filter(user => user.id !== userId));
+    const updatedUsers = this.users().filter(user => user.id !== userId);
+    this.users.set(updatedUsers);
   }
 
   login(role: UserRole): Observable<User | null> {

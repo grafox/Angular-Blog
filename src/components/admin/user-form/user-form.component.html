@@ -1,17 +1,17 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
     <div class="flex items-center space-x-4">
-      <a routerLink="/admin/users" class="text-indigo-600 hover:text-indigo-800">
+      <a routerLink="/admin/users" class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
         </svg>
       </a>
-      <h1 class="text-3xl font-bold text-gray-800">
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">
         {{ isEditMode() ? 'Edit User' : 'Create New User' }}
       </h1>
     </div>
     <div class="flex items-center space-x-3">
-      <button type="button" routerLink="/admin/users" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <button type="button" routerLink="/admin/users" class="bg-white dark:bg-gray-700 py-2 px-4 border border-gray-300 dark:border-gray-500 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         Cancel
       </button>
       <button type="submit" form="userForm" [disabled]="userForm.invalid" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed">
@@ -20,12 +20,12 @@
     </div>
   </div>
 
-  <div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-2xl mx-auto">
     <form id="userForm" [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-6">
       <!-- Name -->
       <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-        <input type="text" id="name" formControlName="name" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+        <input type="text" id="name" formControlName="name" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
         @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
           <p class="mt-1 text-sm text-red-600">Full Name is required.</p>
         }
@@ -33,8 +33,8 @@
 
       <!-- Email -->
       <div>
-        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-        <input type="email" id="email" formControlName="email" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
+        <input type="email" id="email" formControlName="email" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
         @if (userForm.get('email')?.touched) {
           @if(userForm.get('email')?.hasError('required')) {
             <p class="mt-1 text-sm text-red-600">Email is required.</p>
@@ -47,8 +47,8 @@
 
       <!-- Role -->
       <div>
-        <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
-        <select id="role" formControlName="role" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
+        <select id="role" formControlName="role" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
           @for (role of userRoles; track role) {
             <option [value]="role">{{ role }}</option>
           }
@@ -60,8 +60,8 @@
 
       <!-- Profile Image URL -->
       <div>
-        <label for="profileImage" class="block text-sm font-medium text-gray-700">Profile Image URL</label>
-        <input type="text" id="profileImage" formControlName="profileImage" class="mt-1 block w-full rounded-md border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        <label for="profileImage" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Image URL</label>
+        <input type="text" id="profileImage" formControlName="profileImage" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
           @if (userForm.get('profileImage')?.invalid && userForm.get('profileImage')?.touched) {
           <p class="mt-1 text-sm text-red-600">Profile Image URL is required.</p>
         }

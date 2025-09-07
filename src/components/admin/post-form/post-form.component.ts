@@ -6,6 +6,7 @@ import { BlogService } from '../../../services/blog.service';
 import { Post, Author, Category } from '../../../models/post.model';
 import { of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { AuthService } from '../../../services/auth.service';
 
 // Declare Quill to TypeScript
 declare var Quill: any;
@@ -40,6 +41,7 @@ export function quillValidator(): ValidatorFn {
 export class PostFormComponent implements OnInit, AfterViewInit {
   private fb: FormBuilder = inject(FormBuilder);
   private blogService = inject(BlogService);
+  private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   
@@ -91,10 +93,22 @@ export class PostFormComponent implements OnInit, AfterViewInit {
         if (this.editor) {
             this.editor.root.innerHTML = post.content;
         }
+      } else if (!this.isEditMode()) {
+        this.setDefaultAuthor();
       }
     });
   }
   
+  private setDefaultAuthor() {
+    const currentUser = this.authService.currentUser();
+    if (currentUser) {
+      const author = this.authors().find(a => a.id === currentUser.id);
+      if (author) {
+        this.postForm.patchValue({ author });
+      }
+    }
+  }
+
   ngAfterViewInit(): void {
     this.editor = new Quill('#editor-container', {
       theme: 'snow',

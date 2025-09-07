@@ -1,6 +1,6 @@
 <div class="space-y-6">
   <div class="flex justify-between items-center">
-    <h1 class="text-3xl font-bold text-gray-800">User Management</h1>
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">User Management</h1>
     <button (click)="createUser()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors duration-200 font-semibold flex items-center">
       <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -9,57 +9,57 @@
     </button>
   </div>
   
-  <div class="bg-white rounded-lg shadow-md">
-     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 m-6 rounded-r-lg" role="alert">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+     <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 dark:bg-yellow-900/50 dark:border-yellow-600 dark:text-yellow-300 p-4 m-6 rounded-r-lg" role="alert">
       <p class="font-bold">Admin Access Only</p>
       <p>This page is restricted to users with the 'Admin' role.</p>
     </div>
 
     <div class="overflow-x-auto">
-      <table class="w-full min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+      <table class="w-full min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead class="bg-gray-50 dark:bg-gray-700">
           <tr>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
+            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
           @for (user of users(); track user.id) {
-            <tr [class.bg-indigo-50]="isCurrentUser(user.id)">
+            <tr [class]="isCurrentUser(user.id) ? 'bg-indigo-50 dark:bg-indigo-900/50' : ''">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
                   <div class="flex-shrink-0 h-10 w-10">
                     <img class="h-10 w-10 rounded-full" [src]="user.profileImage" alt="">
                   </div>
                   <div class="ml-4">
-                    <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ user.name }}</div>
                      @if (isCurrentUser(user.id)) {
-                      <span class="text-xs text-indigo-600">(You)</span>
+                      <span class="text-xs text-indigo-600 dark:text-indigo-400">(You)</span>
                      }
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900">{{ user.email }}</div>
+                <div class="text-sm text-gray-900 dark:text-gray-100">{{ user.email }}</div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                 <select 
                   [disabled]="isCurrentUser(user.id)" 
                   (change)="updateRole(user.id, $event)" 
-                  class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:bg-gray-200 disabled:cursor-not-allowed">
+                  class="rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:bg-gray-200 dark:disabled:bg-gray-600 disabled:cursor-not-allowed">
                   @for (role of userRoles; track role) {
                     <option [value]="role" [selected]="user.role === role">{{ role }}</option>
                   }
                 </select>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium space-x-4">
-                 <button (click)="editUser(user.id)" class="text-indigo-600 hover:text-indigo-900">Edit</button>
+                 <button (click)="editUser(user.id)" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</button>
                 <button 
-                  (click)="deleteUser(user.id)" 
+                  (click)="promptDeleteUser(user.id)" 
                   [disabled]="isCurrentUser(user.id)" 
-                  class="text-red-600 hover:text-red-900 disabled:text-gray-400 disabled:cursor-not-allowed">
+                  class="text-red-600 hover:text-red-900 dark:text-red-500 dark:hover:text-red-400 disabled:text-gray-400 disabled:cursor-not-allowed">
                   Delete
                 </button>
               </td>
@@ -70,3 +70,13 @@
     </div>
   </div>
 </div>
+
+<app-confirmation-dialog 
+  [isOpen]="isDeleteModalOpen()"
+  title="Delete User"
+  message="Are you sure you want to delete this user? This action is permanent and cannot be undone."
+  confirmButtonText="Yes, Delete"
+  cancelButtonText="No, Cancel"
+  (confirm)="confirmDelete()"
+  (cancel)="closeDeleteModal()">
+</app-confirmation-dialog>

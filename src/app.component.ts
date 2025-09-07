@@ -4,6 +4,7 @@ import { HeaderComponent } from './components/shared/header/header.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs/operators';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ import { filter, map } from 'rxjs/operators';
 })
 export class AppComponent {
   private router = inject(Router);
+  private themeService = inject(ThemeService);
 
   private currentUrl = toSignal(
     this.router.events.pipe(
