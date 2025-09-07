@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { of, Observable } from 'rxjs';
 import { Post, Author, Category, Tag } from '../models/post.model';
 
@@ -118,6 +118,7 @@ export class BlogService {
   private readonly categories = signal<Category[]>(CATEGORIES);
   private readonly tags = signal<Tag[]>(TAGS);
 
+  readonly postCount = computed(() => this.posts().length);
 
   getPosts() {
     return this.posts.asReadonly();

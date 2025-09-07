@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, UserRole } from '../models/user.model';
 import { of, Observable, delay } from 'rxjs';
@@ -13,6 +13,8 @@ export class AuthService {
   private router = inject(Router);
   readonly currentUser = signal<User | null>(null);
   private readonly users = signal<User[]>(MOCK_USERS);
+  
+  readonly userCount = computed(() => this.users().length);
 
   isLoggedIn(): boolean {
     return !!this.currentUser();
