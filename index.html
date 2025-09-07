@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angular CMS Blog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+  <!-- Quill editor -->
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+<style>
+  /* Custom styles for rendering Quill content on the frontend */
+  .prose pre.ql-syntax {
+    background-color: #1f2937; /* Tailwind gray-800 */
+    color: #f3f4f6; /* Tailwind gray-100 */
+    padding: 1rem;
+    border-radius: 0.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+  }
+  .prose blockquote {
+    border-left-color: #4f46e5; /* Tailwind indigo-600 */
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "rxjs": "https://aistudiocdn.com/rxjs@^7.8.2?conditions=es2015",
+    "rxjs/operators": "https://aistudiocdn.com/rxjs@^7.8.2/operators?conditions=es2015",
+    "rxjs/ajax": "https://aistudiocdn.com/rxjs@^7.8.2/ajax?conditions=es2015",
+    "rxjs/webSocket": "https://aistudiocdn.com/rxjs@^7.8.2/webSocket?conditions=es2015",
+    "rxjs/testing": "https://aistudiocdn.com/rxjs@^7.8.2/testing?conditions=es2015",
+    "rxjs/fetch": "https://aistudiocdn.com/rxjs@^7.8.2/fetch?conditions=es2015",
+    "@angular/common": "https://next.esm.sh/@angular/common@^20.1.6-0?external=rxjs",
+    "@angular/common/http": "https://next.esm.sh/@angular/common@^20.1.6-0/http?external=rxjs",
+    "@angular/router": "https://next.esm.sh/@angular/router@^20.1.6-0?external=rxjs",
+    "@angular/core": "https://next.esm.sh/@angular/core@^20.1.6-0?external=rxjs",
+    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^20.1.6-0?external=rxjs",
+    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^20.1.6-0?external=rxjs",
+    "@angular/core/rxjs-interop": "https://next.esm.sh/@angular/core@^20.1.6-0/rxjs-interop?external=rxjs",
+    "@angular/forms": "https://next.esm.sh/@angular/forms@^20.1.6-0?external=rxjs"
+  }
+}
+</script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <app-root></app-root>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "name": "Angular CMS Blog",
+  "description": "A modern, CMS-based blog website frontend built with Angular and styled with Tailwind CSS, designed to work with a Firebase backend. This applet showcases the public-facing pages, including a blog list and a detailed post view.",
+  "requestFramePermissions": []
+}

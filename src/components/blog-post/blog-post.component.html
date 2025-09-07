@@ -1,0 +1,45 @@
+
+@if (post(); as post) {
+  <article class="max-w-4xl mx-auto">
+    <header class="mb-8">
+      <div class="mb-4">
+        @for (category of post.categories; track category.id) {
+          <a [routerLink]="['/category', category.slug]" class="text-indigo-600 uppercase font-semibold text-sm mr-2 hover:underline">{{ category.name }}</a>
+        }
+      </div>
+      <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-4">{{ post.title }}</h1>
+      <div class="flex items-center text-gray-500 text-sm">
+        <img [src]="post.author.profileImage" [alt]="post.author.name" class="w-10 h-10 rounded-full mr-3">
+        <div>
+          <span class="font-medium text-gray-800">{{ post.author.name }}</span>
+          <span> &middot; </span>
+          <time [dateTime]="post.createdAt | date:'yyyy-MM-dd'">{{ post.createdAt | date:'longDate' }}</time>
+        </div>
+      </div>
+    </header>
+
+    <figure class="mb-8">
+      <img [src]="post.featuredImage" [alt]="post.title" class="w-full h-auto rounded-lg shadow-lg object-cover">
+    </figure>
+
+    <div class="prose prose-lg max-w-none" [innerHTML]="sanitizedContent()">
+      <!-- Sanitized post content will be rendered here -->
+    </div>
+    
+    <footer class="mt-12 pt-8 border-t border-gray-200">
+      <div class="flex items-center flex-wrap">
+        <span class="font-semibold mr-3 text-gray-700">Tags:</span>
+        @for (tag of post.tags; track tag.id) {
+          <a [routerLink]="['/tag', tag.slug]" class="bg-gray-100 text-gray-600 text-sm font-medium mr-2 mb-2 px-3 py-1 rounded-full hover:bg-gray-200 transition-colors">
+            #{{ tag.name }}
+          </a>
+        }
+      </div>
+    </footer>
+  </article>
+} @else {
+  <div class="text-center py-20">
+    <h2 class="text-2xl font-semibold text-gray-700">Loading post...</h2>
+    <p class="text-gray-500 mt-2">Please wait a moment.</p>
+  </div>
+}
