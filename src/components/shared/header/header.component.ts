@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/cor
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ThemeService } from '../../../services/theme.service';
+import { BlogService } from '../../../services/blog.service';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +14,12 @@ export class HeaderComponent {
   private router = inject(Router);
   private authService = inject(AuthService);
   private themeService = inject(ThemeService);
+  private blogService = inject(BlogService);
 
   isMobileMenuOpen = signal(false);
   currentUser = this.authService.currentUser;
   currentTheme = this.themeService.currentTheme;
+  siteSettings = this.blogService.getSiteSettings();
   
   toggleMobileMenu() {
     this.isMobileMenuOpen.update(value => !value);

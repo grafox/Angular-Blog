@@ -1,0 +1,52 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Site Settings</h1>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+    <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Blog Name -->
+      <div>
+        <label for="blogName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Blog Name</label>
+        <input type="text" id="blogName" formControlName="blogName" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        @if (settingsForm.get('blogName')?.invalid && settingsForm.get('blogName')?.touched) {
+          <p class="mt-1 text-sm text-red-600 dark:text-red-400">Blog Name is required.</p>
+        }
+      </div>
+
+      <!-- Homepage Title -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Homepage Title</label>
+        <input type="text" id="title" formControlName="title" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        @if (settingsForm.get('title')?.invalid && settingsForm.get('title')?.touched) {
+          <p class="mt-1 text-sm text-red-600 dark:text-red-400">Homepage Title is required.</p>
+        }
+      </div>
+
+      <!-- Homepage Subtitle -->
+      <div>
+        <label for="subtitle" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Homepage Subtitle</label>
+        <textarea id="subtitle" formControlName="subtitle" rows="3" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base"></textarea>
+        @if (settingsForm.get('subtitle')?.invalid && settingsForm.get('subtitle')?.touched) {
+          <p class="mt-1 text-sm text-red-600 dark:text-red-400">Homepage Subtitle is required.</p>
+        }
+      </div>
+
+      <!-- Homepage Hero Image URL -->
+      <div>
+        <label for="heroImageUrl" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Homepage Header Image URL</label>
+        <input type="text" id="heroImageUrl" formControlName="heroImageUrl" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-3 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-base">
+        @if (settingsForm.get('heroImageUrl')?.invalid && settingsForm.get('heroImageUrl')?.touched) {
+          <p class="mt-1 text-sm text-red-600 dark:text-red-400">Image URL is required.</p>
+        }
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+        <button type="submit" [disabled]="settingsForm.invalid || settingsForm.pristine" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed">
+          Save Settings
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

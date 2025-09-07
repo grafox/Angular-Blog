@@ -13,6 +13,7 @@ import { BlogService } from '../../services/blog.service';
 export class BlogListComponent {
   private blogService = inject(BlogService);
   posts = this.blogService.getPosts();
+  siteSettings = this.blogService.getSiteSettings();
 
   getExcerpt(content: string): string {
     const tempDiv = document.createElement('div');

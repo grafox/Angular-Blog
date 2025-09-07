@@ -117,6 +117,13 @@ const MOCK_COMMENTS: Comment[] = [
     { id: 'comment-3', postId: 'post-2', userId: 'user-1', userName: 'Alex Johnson', userProfileImage: 'https://i.pravatar.cc/150?u=alex', content: 'Security rules are so important. Glad to see a post covering them.', createdAt: new Date('2023-10-20T15:00:00Z'), status: 'approved' },
 ];
 
+interface SiteSettings {
+  blogName: string;
+  title: string;
+  subtitle: string;
+  heroImageUrl: string;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export class BlogService {
@@ -125,9 +132,24 @@ export class BlogService {
   private readonly categories = signal<Category[]>(CATEGORIES);
   private readonly tags = signal<Tag[]>(TAGS);
   private readonly comments = signal<Comment[]>(MOCK_COMMENTS);
+  private readonly siteSettings = signal<SiteSettings>({
+    blogName: 'Angular Blog',
+    title: 'From the Blog',
+    subtitle: 'Latest articles and tutorials on modern web development.',
+    heroImageUrl: 'https://picsum.photos/seed/blog-hero/1600/900',
+  });
 
   readonly postCount = computed(() => this.posts().length);
   readonly commentCount = computed(() => this.comments().length);
+
+  getSiteSettings() {
+    return this.siteSettings.asReadonly();
+  }
+
+  updateSiteSettings(newSettings: SiteSettings) {
+    this.siteSettings.set(newSettings);
+    // In a real app, this would save to Firestore.
+  }
 
   getPosts() {
     return this.posts.asReadonly();

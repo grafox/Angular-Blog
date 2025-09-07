@@ -15,6 +15,7 @@ import { UserRole } from './models/user.model';
 import { PostFormComponent } from './components/admin/post-form/post-form.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
 import { CommentManagementComponent } from './components/admin/comment-management/comment-management.component';
+import { SettingsComponent } from './components/admin/settings/settings.component';
 
 export const APP_ROUTES: Routes = [
   // Public Routes
@@ -83,6 +84,13 @@ export const APP_ROUTES: Routes = [
         canActivate: [roleGuard],
         data: { roles: [UserRole.Admin] },
         title: 'Edit User | Admin'
+      },
+      {
+        path: 'settings',
+        component: SettingsComponent,
+        canActivate: [roleGuard],
+        data: { roles: [UserRole.Admin] },
+        title: 'Site Settings | Admin'
       }
     ]
   },

@@ -1,9 +1,14 @@
 <div class="space-y-12">
-  <div class="text-center">
-    <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">From the Blog</h1>
-    <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">
-      Latest articles and tutorials on modern web development.
-    </p>
+  <!-- Hero Header Image -->
+  <div class="relative w-full h-64 sm:h-80 md:h-96 rounded-2xl overflow-hidden shadow-2xl">
+    <img [src]="siteSettings().heroImageUrl" alt="Blog hero image" class="absolute inset-0 w-full h-full object-cover object-center" />
+    <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+    <div class="relative h-full flex flex-col justify-center items-center text-center text-white p-6">
+      <h1 class="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl drop-shadow-lg">{{ siteSettings().title }}</h1>
+      <p class="mt-4 max-w-3xl text-lg sm:text-xl opacity-90 drop-shadow-md">
+        {{ siteSettings().subtitle }}
+      </p>
+    </div>
   </div>
 
   <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-3">
