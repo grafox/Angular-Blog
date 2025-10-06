@@ -10,7 +10,7 @@ import { BlogService } from '../../../services/blog.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
-  private fb = inject(FormBuilder);
+  private fb: FormBuilder = inject(FormBuilder);
   private blogService = inject(BlogService);
 
   settingsForm!: FormGroup;

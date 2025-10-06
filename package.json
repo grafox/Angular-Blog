@@ -1,5 +1,5 @@
 {
-  "name": "angular-cms-blog",
+  "name": "angular-cms-blog-with-firebase-database",
   "private": true,
   "version": "0.0.0",
   "type": "module",

@@ -1,121 +1,12 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { of, Observable } from 'rxjs';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Post, Author, Category, Tag } from '../models/post.model';
 import { Comment } from '../models/comment.model';
-
-const AUTHORS: Author[] = [
-  { id: 'user-1', name: 'Alex Johnson', profileImage: 'https://i.pravatar.cc/150?u=alex', bio: 'Frontend enthusiast with a passion for clean code and beautiful UIs.' },
-  { id: 'user-2', name: 'Maria Garcia', profileImage: 'https://i.pravatar.cc/150?u=maria', bio: 'Backend developer specializing in serverless architectures and Firebase.' }
-];
-
-const CATEGORIES: Category[] = [
-  { id: 'cat-1', name: 'Angular', slug: 'angular' },
-  { id: 'cat-2', name: 'Firebase', slug: 'firebase' },
-  { id: 'cat-3', name: 'Web Development', slug: 'web-development' },
-];
-
-const TAGS: Tag[] = [
-    {id: 'tag-1', name: 'Signals', slug: 'signals'},
-    {id: 'tag-2', name: 'Performance', slug: 'performance'},
-    {id: 'tag-3', name: 'Firestore', slug: 'firestore'},
-    {id: 'tag-4', name: 'UI/UX', slug: 'ui-ux'},
-];
-
-
-const MOCK_POSTS: Post[] = [
-  {
-    id: 'post-1',
-    title: 'Getting Started with Angular Signals',
-    slug: 'getting-started-with-angular-signals',
-    content: `
-      <p class="mb-4">Angular Signals are a new reactivity primitive that allows us to create reactive values and express dependencies between them. This is a game-changer for state management in Angular applications.</p>
-      <h3 class="text-xl font-semibold mt-6 mb-2">Why Signals?</h3>
-      <p class="mb-4">Signals provide a more fine-grained change detection mechanism compared to Zone.js. When a signal's value changes, only the components that depend on that signal are checked for updates. This leads to significant performance improvements, especially in complex applications.</p>
-      <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code class="language-typescript">import { signal } from '@angular/core';
-
-const count = signal(0);
-
-// To read the value
-console.log(count()); // 0
-
-// To update the value
-count.set(1);
-
-// To update based on the previous value
-count.update(value => value + 1);
-      </code></pre>
-      <p class="mt-4">This new system simplifies state management and makes Angular applications faster and more efficient.</p>
-    `,
-    status: 'published',
-    createdAt: new Date('2023-10-26T10:00:00Z'),
-    updatedAt: new Date('2023-10-26T12:30:00Z'),
-    author: AUTHORS[0],
-    categories: [CATEGORIES[0], CATEGORIES[2]],
-    tags: [TAGS[0], TAGS[1]],
-    featuredImage: 'https://picsum.photos/seed/signals/800/400',
-    viewsCount: 1250
-  },
-  {
-    id: 'post-2',
-    title: 'Securing Your App with Firebase Firestore Rules',
-    slug: 'securing-app-with-firestore-rules',
-    content: `
-      <p class="mb-4">Firebase Firestore is a powerful NoSQL database, but with great power comes great responsibility. Securing your data is crucial, and Firestore provides a robust security model through its security rules.</p>
-      <h3 class="text-xl font-semibold mt-6 mb-2">Basic Rules</h3>
-      <p class="mb-4">By default, new Firestore databases deny all access. You must explicitly write rules to allow read or write operations. A common starting point is to allow read access for everyone but restrict write access to authenticated users.</p>
-      <pre class="bg-gray-800 text-white p-4 rounded-lg overflow-x-auto"><code class="language-firestore-rules">rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow public read access to posts
-    match /posts/{postId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-  }
-}
-      </code></pre>
-      <p class="mt-4">These rules are incredibly flexible, allowing you to define granular access control based on user roles, document data, and more. Mastering them is key to building a secure and scalable application with Firebase.</p>
-    `,
-    status: 'published',
-    createdAt: new Date('2023-10-20T14:00:00Z'),
-    updatedAt: new Date('2023-10-21T09:00:00Z'),
-    author: AUTHORS[1],
-    categories: [CATEGORIES[1], CATEGORIES[2]],
-    tags: [TAGS[2]],
-    featuredImage: 'https://picsum.photos/seed/firebase/800/400',
-    viewsCount: 980
-  },
-  {
-    id: 'post-3',
-    title: 'UI/UX Design Principles for Developers',
-    slug: 'ui-ux-design-principles-for-developers',
-    content: `
-      <p class="mb-4">As developers, we often focus on functionality, but a great user experience (UX) and user interface (UI) are what make an application truly successful. You don't need to be a designer to apply some fundamental principles that can dramatically improve your work.</p>
-      <h3 class="text-xl font-semibold mt-6 mb-2">Key Principles</h3>
-      <ul class="list-disc list-inside mb-4 pl-4">
-        <li><strong>Consistency:</strong> Ensure that elements in your UI are consistent in appearance and behavior.</li>
-        <li><strong>Hierarchy:</strong> Use size, color, and placement to guide the user's eye to the most important elements.</li>
-        <li><strong>Feedback:</strong> Provide immediate and clear feedback for user actions.</li>
-        <li><strong>Simplicity:</strong> Keep the interface clean and uncluttered. Every element should have a purpose.</li>
-      </ul>
-      <p class="mt-4">By keeping these principles in mind, you can create applications that are not only powerful but also intuitive and enjoyable to use.</p>
-    `,
-    status: 'published',
-    createdAt: new Date('2023-09-15T08:00:00Z'),
-    updatedAt: new Date('2023-09-15T11:00:00Z'),
-    author: AUTHORS[0],
-    categories: [CATEGORIES[2]],
-    tags: [TAGS[3]],
-    featuredImage: 'https://picsum.photos/seed/design/800/400',
-    viewsCount: 2100
-  }
-];
-
-const MOCK_COMMENTS: Comment[] = [
-    { id: 'comment-1', postId: 'post-1', userId: 'user-2', userName: 'Maria Garcia', userProfileImage: 'https://i.pravatar.cc/150?u=maria', content: 'Great introduction to Signals! Really looking forward to using this more.', createdAt: new Date('2023-10-26T11:00:00Z'), status: 'approved' },
-    { id: 'comment-2', postId: 'post-1', userId: 'user-guest', userName: 'Guest User', userProfileImage: 'https://i.pravatar.cc/150?u=guest', content: 'This was helpful, thanks!', createdAt: new Date('2023-10-26T11:30:00Z'), status: 'pending' },
-    { id: 'comment-3', postId: 'post-2', userId: 'user-1', userName: 'Alex Johnson', userProfileImage: 'https://i.pravatar.cc/150?u=alex', content: 'Security rules are so important. Glad to see a post covering them.', createdAt: new Date('2023-10-20T15:00:00Z'), status: 'approved' },
-];
+import { FirebaseService } from './firebase.service';
+import { ref, onValue, set, push, remove, update, get } from 'firebase/database';
+import { SEED_AUTHORS, SEED_CATEGORIES, SEED_TAGS, SEED_POSTS, SEED_COMMENTS, SEED_SITE_SETTINGS } from '../data/seed-data';
 
 interface SiteSettings {
   blogName: string;
@@ -124,14 +15,15 @@ interface SiteSettings {
   heroImageUrl: string;
 }
 
-
 @Injectable({ providedIn: 'root' })
 export class BlogService {
-  private readonly posts = signal<Post[]>(MOCK_POSTS);
-  private readonly authors = signal<Author[]>(AUTHORS);
-  private readonly categories = signal<Category[]>(CATEGORIES);
-  private readonly tags = signal<Tag[]>(TAGS);
-  private readonly comments = signal<Comment[]>(MOCK_COMMENTS);
+  private firebase = inject(FirebaseService);
+
+  private readonly posts = signal<Post[]>([]);
+  private readonly authors = signal<Author[]>([]);
+  private readonly categories = signal<Category[]>([]);
+  private readonly tags = signal<Tag[]>([]);
+  private readonly comments = signal<Comment[]>([]);
   private readonly siteSettings = signal<SiteSettings>({
     blogName: 'Angular Blog',
     title: 'From the Blog',
@@ -142,13 +34,93 @@ export class BlogService {
   readonly postCount = computed(() => this.posts().length);
   readonly commentCount = computed(() => this.comments().length);
 
+  constructor() {
+    this.seedDatabaseIfEmpty().then(() => {
+      this.loadData();
+    });
+  }
+
+  private async seedDatabaseIfEmpty() {
+    const checkAndSeed = async (path: string, data: any) => {
+        const dataRef = ref(this.firebase.db, path);
+        const snapshot = await get(dataRef);
+        if (!snapshot.exists()) {
+            console.log(`No data at ${path}. Seeding...`);
+            await set(dataRef, data);
+        }
+    };
+
+    await Promise.all([
+      checkAndSeed('authors', SEED_AUTHORS),
+      checkAndSeed('categories', SEED_CATEGORIES),
+      checkAndSeed('tags', SEED_TAGS),
+      checkAndSeed('posts', SEED_POSTS),
+      checkAndSeed('comments', SEED_COMMENTS),
+      checkAndSeed('siteSettings', SEED_SITE_SETTINGS)
+    ]);
+  }
+
+  private firebaseObjectToArray(obj: any): any[] {
+    if (!obj) return [];
+    return Object.keys(obj).map(key => ({ ...obj[key], id: key }));
+  }
+
+  private loadData() {
+    // Posts
+    onValue(ref(this.firebase.db, 'posts'), (snapshot) => {
+      const postsObj = snapshot.val();
+      const postsArray = this.firebaseObjectToArray(postsObj);
+      postsArray.forEach(p => {
+        p.createdAt = new Date(p.createdAt);
+        p.updatedAt = new Date(p.updatedAt);
+        if (p.categories && !Array.isArray(p.categories)) {
+          p.categories = Object.values(p.categories);
+        }
+        if (p.tags && !Array.isArray(p.tags)) {
+          p.tags = Object.values(p.tags);
+        }
+      });
+      this.posts.set(postsArray.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()));
+    });
+
+    // Authors
+    onValue(ref(this.firebase.db, 'authors'), (snapshot) => {
+      this.authors.set(this.firebaseObjectToArray(snapshot.val()));
+    });
+
+    // Categories
+    onValue(ref(this.firebase.db, 'categories'), (snapshot) => {
+      this.categories.set(this.firebaseObjectToArray(snapshot.val()));
+    });
+
+    // Tags
+    onValue(ref(this.firebase.db, 'tags'), (snapshot) => {
+      this.tags.set(this.firebaseObjectToArray(snapshot.val()));
+    });
+
+    // Comments
+    onValue(ref(this.firebase.db, 'comments'), (snapshot) => {
+      const commentsArray = this.firebaseObjectToArray(snapshot.val());
+      commentsArray.forEach(c => {
+        c.createdAt = new Date(c.createdAt);
+      });
+      this.comments.set(commentsArray);
+    });
+    
+    // Site Settings
+    onValue(ref(this.firebase.db, 'siteSettings'), (snapshot) => {
+      if(snapshot.exists()) {
+        this.siteSettings.set(snapshot.val());
+      }
+    });
+  }
+
   getSiteSettings() {
     return this.siteSettings.asReadonly();
   }
 
   updateSiteSettings(newSettings: SiteSettings) {
-    this.siteSettings.set(newSettings);
-    // In a real app, this would save to Firestore.
+    set(ref(this.firebase.db, 'siteSettings'), newSettings);
   }
 
   getPosts() {
@@ -168,23 +140,24 @@ export class BlogService {
   }
 
   updateCommentStatus(commentId: string, status: 'approved' | 'pending' | 'rejected') {
-    this.comments.update(comments => comments.map(comment =>
-      comment.id === commentId ? { ...comment, status } : comment
-    ));
+    const commentRef = ref(this.firebase.db, `comments/${commentId}`);
+    update(commentRef, { status });
   }
 
   deleteComment(commentId: string) {
-    this.comments.update(comments => comments.filter(c => c.id !== commentId));
+    remove(ref(this.firebase.db, `comments/${commentId}`));
   }
 
   getPostById(id: string): Observable<Post | undefined> {
-    const foundPost = this.posts().find(p => p.id === id);
-    return of(foundPost);
+    return toObservable(this.posts).pipe(
+        map(posts => posts.find(p => p.id === id))
+    );
   }
 
   getPostBySlug(slug: string): Observable<Post | undefined> {
-    const foundPost = this.posts().find(p => p.slug === slug);
-    return of(foundPost);
+     return toObservable(this.posts).pipe(
+        map(posts => posts.find(p => p.slug === slug))
+    );
   }
   
   private createSlug(title: string): string {
@@ -192,43 +165,50 @@ export class BlogService {
   }
 
   addPost(postData: Omit<Post, 'id' | 'slug' | 'createdAt' | 'updatedAt'>) {
-    const newPost: Post = {
+    const postListRef = ref(this.firebase.db, 'posts');
+    const newPostRef = push(postListRef);
+    const newPost = {
       ...postData,
-      id: `post-${Date.now()}`,
       slug: this.createSlug(postData.title),
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
-    this.posts.update(posts => [newPost, ...posts]);
+    set(newPostRef, newPost);
   }
 
   updatePost(updatedPost: Post) {
-    updatedPost.updatedAt = new Date();
-    updatedPost.slug = this.createSlug(updatedPost.title);
-    this.posts.update(posts => 
-      posts.map(p => p.id === updatedPost.id ? updatedPost : p)
-    );
+    const postRef = ref(this.firebase.db, `posts/${updatedPost.id}`);
+    const postData = {
+      ...updatedPost,
+      slug: this.createSlug(updatedPost.title),
+      createdAt: (updatedPost.createdAt instanceof Date) 
+        ? updatedPost.createdAt.toISOString() 
+        : updatedPost.createdAt,
+      updatedAt: new Date().toISOString(),
+    };
+    delete (postData as any).id;
+    set(postRef, postData);
   }
   
   deletePost(postId: string) {
-    this.posts.update(posts => posts.filter(p => p.id !== postId));
+    remove(ref(this.firebase.db, `posts/${postId}`));
   }
 
   searchPosts(query: string): Observable<Post[]> {
     const lowerCaseQuery = query.toLowerCase().trim();
     if (!lowerCaseQuery) {
-        return of([]);
+        return toObservable(this.posts).pipe(map(() => []));
     }
     
-    const filteredPosts = this.posts().filter(post => {
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = post.content;
-        const postContent = tempDiv.textContent || tempDiv.innerText || "";
+    return toObservable(this.posts).pipe(
+        map(posts => posts.filter(post => {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = post.content;
+            const postContent = tempDiv.textContent || tempDiv.innerText || "";
 
-        return post.title.toLowerCase().includes(lowerCaseQuery) ||
-               postContent.toLowerCase().includes(lowerCaseQuery);
-    });
-    
-    return of(filteredPosts);
+            return post.title.toLowerCase().includes(lowerCaseQuery) ||
+                   postContent.toLowerCase().includes(lowerCaseQuery);
+        }))
+    );
   }
 }

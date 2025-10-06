@@ -1,20 +1,46 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { User, UserRole } from '../models/user.model';
-import { of, Observable, delay } from 'rxjs';
-
-const MOCK_USERS: User[] = [
-  { id: 'admin-1', name: 'Admin User', email: 'admin@test.com', role: UserRole.Admin, profileImage: 'https://i.pravatar.cc/150?u=admin' },
-  { id: 'editor-1', name: 'Editor User', email: 'editor@test.com', role: UserRole.Editor, profileImage: 'https://i.pravatar.cc/150?u=editor' },
-];
+import { Observable } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
+import { FirebaseService } from './firebase.service';
+// FIX: Import `push`, `update`, and `remove` from firebase/database to resolve undefined function errors.
+import { ref, onValue, set, get, push, remove, update } from 'firebase/database';
+import { SEED_USERS } from '../data/seed-data';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private router = inject(Router);
+  private firebase = inject(FirebaseService);
+
   readonly currentUser = signal<User | null>(null);
-  private readonly users = signal<User[]>(MOCK_USERS);
+  private readonly users = signal<User[]>([]);
   
   readonly userCount = computed(() => this.users().length);
+
+  constructor() {
+    this.seedUsersIfEmpty().then(() => {
+       onValue(ref(this.firebase.db, 'users'), (snapshot) => {
+        const usersObj = snapshot.val();
+        if (usersObj) {
+          const usersArray = Object.keys(usersObj).map(key => ({ ...usersObj[key], id: key }));
+          this.users.set(usersArray);
+        } else {
+          this.users.set([]);
+        }
+      });
+    });
+  }
+
+  private async seedUsersIfEmpty() {
+    const usersRef = ref(this.firebase.db, 'users');
+    const snapshot = await get(usersRef);
+    if (!snapshot.exists()) {
+      console.log('No users found in Firebase. Seeding database...');
+      await set(usersRef, SEED_USERS);
+    }
+  }
 
   isLoggedIn(): boolean {
     return !!this.currentUser();
@@ -25,8 +51,9 @@ export class AuthService {
   }
   
   getUserById(id: string): Observable<User | undefined> {
-    const foundUser = this.users().find(u => u.id === id);
-    return of(foundUser);
+    return toObservable(this.users).pipe(
+        map(users => users.find(u => u.id === id))
+    );
   }
 
   hasRole(role: UserRole): boolean {
@@ -34,32 +61,29 @@ export class AuthService {
   }
   
   addUser(userData: Omit<User, 'id'>) {
-    const newUser: User = {
-      ...userData,
-      id: `user-${Date.now()}`,
-    };
-    this.users.update(users => [newUser, ...users]);
+    const userListRef = ref(this.firebase.db, 'users');
+    const newUserRef = push(userListRef);
+    set(newUserRef, userData);
   }
 
   updateUser(updatedUser: User) {
-    this.users.update(users => 
-      users.map(u => u.id === updatedUser.id ? updatedUser : u)
-    );
+    const userRef = ref(this.firebase.db, `users/${updatedUser.id}`);
+    const userData = { ...updatedUser };
+    delete (userData as any).id;
+    set(userRef, userData);
   }
   
   updateUserRole(userId: string, newRole: UserRole) {
-    this.users.update(users => users.map(user => 
-      user.id === userId ? { ...user, role: newRole } : user
-    ));
+    const userRoleRef = ref(this.firebase.db, `users/${userId}`);
+    update(userRoleRef, { role: newRole });
   }
   
   deleteUser(userId: string) {
-    // Prevent self-deletion
     if (this.currentUser()?.id === userId) {
       console.error("You cannot delete your own account.");
       return;
     }
-    this.users.update(users => users.filter(user => user.id !== userId));
+    remove(ref(this.firebase.db, `users/${userId}`));
   }
 
   login(role: UserRole): Observable<User | null> {
@@ -67,8 +91,12 @@ export class AuthService {
     if (user) {
       this.currentUser.set(user);
     }
-    // Simulate network delay
-    return of(user).pipe(delay(500));
+    return new Observable(observer => {
+      setTimeout(() => {
+        observer.next(user);
+        observer.complete();
+      }, 500);
+    });
   }
 
   logout(): void {
