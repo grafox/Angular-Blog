@@ -4,14 +4,14 @@ import { getDatabase, Database } from 'firebase/database';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD4zP6yqrrptAtzsiGbC1Vo3P0Q6hiiiRg",
-  authDomain: "angular-cms-blog-6f976.firebaseapp.com",
-  databaseURL: "https://angular-cms-blog-6f976-default-rtdb.firebaseio.com",
-  projectId: "angular-cms-blog-6f976",
-  storageBucket: "angular-cms-blog-6f976.firebasestorage.app",
-  messagingSenderId: "346357465757",
-  appId: "1:346357465757:web:930675385bb8443ba28a74",
-  measurementId: "G-1C9DJTTK9Q"
+  apiKey: "X",
+  authDomain: "X",
+  databaseURL: "",
+  projectId: "X",
+  storageBucket: "X",
+  messagingSenderId: "X",
+  appId: "X",
+  measurementId: "X"
 };
 
 @Injectable({ providedIn: 'root' })
