@@ -44,6 +44,7 @@ export class PostFormComponent implements OnInit, AfterViewInit {
   private router = inject(Router);
   
   private editor: any;
+  private originalPost: Post | undefined; // To hold original post data for edits
 
   postForm!: FormGroup;
   isEditMode = signal(false);
@@ -77,6 +78,7 @@ export class PostFormComponent implements OnInit, AfterViewInit {
       })
     ).subscribe(post => {
       if (post) {
+        this.originalPost = post; // Store the original post data
         this.postForm.patchValue({
           title: post.title,
           content: post.content,
@@ -129,6 +131,11 @@ export class PostFormComponent implements OnInit, AfterViewInit {
       this.postForm.get('content')?.markAsTouched();
     });
   }
+
+  // Compare function for the author select dropdown
+  compareAuthors(a1: Author, a2: Author): boolean {
+    return a1 && a2 ? a1.id === a2.id : a1 === a2;
+  }
   
   onCategoryChange(event: Event, category: Category) {
     const selectedCategories = this.postForm.get('categories')?.value as Category[] || [];
@@ -164,14 +171,13 @@ export class PostFormComponent implements OnInit, AfterViewInit {
       tags: formValue.tags.split(',').map((name: string) => name.trim()).filter((name: string) => name).map((name: string) => ({ id: `tag-${name}`, name: name, slug: name.toLowerCase() })),
     };
 
-
-    if (this.isEditMode() && this.postId()) {
-      const fullPost: Post = {
-        ...postData,
-        id: this.postId()!,
-        // slug, createdAt, updatedAt are handled by the service
+    if (this.isEditMode() && this.postId() && this.originalPost) {
+      // Merge form data over original post data to preserve fields like createdAt
+      const updatedPost = {
+        ...this.originalPost,
+        ...postData
       };
-      this.blogService.updatePost(fullPost);
+      this.blogService.updatePost(updatedPost);
     } else {
       this.blogService.addPost(postData);
     }
